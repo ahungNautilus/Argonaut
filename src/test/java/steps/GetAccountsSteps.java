@@ -1,16 +1,17 @@
 package steps;
 
+import checkpoints.AccountsCheckPoints;
 import endpoints.Accounts;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
-import org.json.JSONArray;
+import models.Account;
 import org.json.JSONObject;
 import org.testng.Assert;
+import utils.CreateBodyContent;
 import utils.RequestMakers;
 
-import java.lang.reflect.Array;
 
 public class GetAccountsSteps {
 
@@ -45,5 +46,26 @@ public class GetAccountsSteps {
     @And("the error code should be {string}")
     public void theErrorCodeShouldBe(String error_code) {
         Assert.assertEquals(error_code,responseJson.get("error_code"), "Server response with incorrect error code");
+    }
+
+
+    @When("I create a valid user with {string}, {string} and {string}")
+    public void iCreateAValidUserWithAnd(String currency, String user_id, String ledger_user_id) {
+        JSONObject contentBody = CreateBodyContent.createNewAccount(currency,user_id,ledger_user_id);
+        System.out.println(contentBody.toString());
+        System.out.println(Accounts.createNewAccount);
+        response = RequestMakers.makePostRequest(Accounts.createNewAccount, contentBody.toString());
+        System.out.println(response.getStatusCode());
+        Assert.assertTrue(200 == response.getStatusCode(),"Server response with incorrect error message");
+        responseJson = new JSONObject(response.getBody().asString());
+        System.out.println(responseJson.toString());
+    }
+
+    @Then("new Account information should be on the database")
+    public void newAccountInformationShouldBeOnTheDatabase() {
+        Account account = new Account( Long.parseLong(responseJson.get("account_id").toString()) ,responseJson.get("currency").toString(),responseJson.get("status").toString(),
+                responseJson.get("ledger_account_id").toString(),responseJson.get("user_id").toString());
+        AccountsCheckPoints checkPoints = new AccountsCheckPoints();
+        checkPoints.dataBaseAllFields(account);
     }
 }

@@ -18,13 +18,14 @@ public class CreateBodyContent {
         return newTransfer;
     }
 
-    public static JSONObject createNewAccount(){
+
+    public static JSONObject createNewAccount(String currency, String user_id, String ledger_account_id){
         JSONObject newAccount = new JSONObject();
         newAccount
-                .put("currency","JMD")
+                .put("currency",currency)
                 .put("status","pending")
-                .put("user_id","qa_test@nautilus.team")
-                .put("ledget_account_id","09898767");
+                .put("user_id",user_id)
+                .put("ledger_account_id",ledger_account_id);
 
         return newAccount;
     }
