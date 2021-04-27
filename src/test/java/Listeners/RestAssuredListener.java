@@ -13,7 +13,6 @@ public class RestAssuredListener implements ISuiteListener {
         Transfers.buildEndPoints();
         /*----- Accounts -----*/
         Accounts.host = System.getProperty("hostAccount");
-
-
+        Accounts.buildEndPoints();
     }
 }

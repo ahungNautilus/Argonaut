@@ -18,8 +18,6 @@ public class RequestMakers {
 
     public static Response makePostRequest(String url, String bodyContent) {
         Response response = given()
-                .header("user_id", "user4@mail.com")
-                .header("Authorization", "jwtExample")
                 .when()
                 .body(bodyContent)
                 .post(url)

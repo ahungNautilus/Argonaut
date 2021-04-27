@@ -4,9 +4,12 @@ public class Accounts {
     public static String host = "";
     public static String accountApi = "/accounts/";
     /*----- GET -----*/
-    public static String getUserById = "";
+    public static String getAccountById = "";
+    /*----- POST -----*/
+    public static String createNewAccount = "";
 
     public static void buildEndPoints(){
-        getUserById = host.concat(accountApi).concat("%d");
+        getAccountById = host.concat(accountApi).concat("%d");
+        createNewAccount = host.concat(accountApi);
     }
 }
