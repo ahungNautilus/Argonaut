@@ -17,4 +17,15 @@ public class CreateBodyContent {
 
         return newTransfer;
     }
+
+    public static JSONObject createNewAccount(){
+        JSONObject newAccount = new JSONObject();
+        newAccount
+                .put("currency","JMD")
+                .put("status","pending")
+                .put("user_id","qa_test@nautilus.team")
+                .put("ledget_account_id","09898767");
+
+        return newAccount;
+    }
 }
