@@ -4,16 +4,17 @@ import org.json.JSONObject;
 
 public class CreateBodyContent {
 
-    public static JSONObject createNewTransfer(){
+    public static JSONObject createNewTransfer(int source_account_id, String source_account_email, int amount,
+                                               String currency, int target_account_id, String target_user_id, String comment){
         JSONObject newTransfer = new JSONObject();
         newTransfer
-                .put("source_account_id",4)
-                .put("source_user_id","user4@mail.com")
-                .put("amount",1000)
-                .put("currency","JMD")
-                .put("target_account_id",3)
-                .put("target_user_id","user3@mail.com")
-                .put("comments", "QA Test");
+                .put("source_account_id", source_account_id)
+                .put("source_user_id", source_account_email)
+                .put("amount", amount)
+                .put("currency", currency)
+                .put("target_account_id", target_account_id)
+                .put("target_user_id", target_user_id)
+                .put("comments", comment);
 
         return newTransfer;
     }

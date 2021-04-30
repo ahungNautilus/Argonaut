@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Deme suite" verbose="1">
-    <test name="Account smoke testing">
+<suite name="Transfer Suite" verbose="1">
+    <test name="Transfers smoke test">
         <classes>
             <class name="Runner.TestRunner"></class>
         </classes>

@@ -4,10 +4,10 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
 @CucumberOptions(
-        features = {"src/test/java/features"},
+        features = {"src/test/java/features/transfers"},
         glue = "steps",
-        publish = true,
-        plugin = {"json:target/custom-reportV1/cucumber.json", "html:target/custom-reportV1/cucumber.html"}
+        publish = false,
+        plugin = {"json:target/custom-reportV1/cucumber.json", "html:target/custom-reportV1/TransferSmokeTest.html"}
         )
 public class TestRunner extends AbstractTestNGCucumberTests {
 

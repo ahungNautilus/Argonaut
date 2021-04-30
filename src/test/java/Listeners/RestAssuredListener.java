@@ -14,5 +14,6 @@ public class RestAssuredListener implements ISuiteListener {
         /*----- Accounts -----*/
         Accounts.host = System.getProperty("hostAccount");
         Accounts.buildEndPoints();
+
     }
 }
