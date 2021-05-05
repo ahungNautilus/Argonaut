@@ -1,19 +1,29 @@
 package Listeners;
 
-import endpoints.Accounts;
-import endpoints.Transfers;
+import org.json.JSONObject;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 
-public class RestAssuredListener implements ISuiteListener {
+import java.io.File;
+
+public class RestAssuredListener implements ISuiteListener{
+
+    ClassLoader classLoader;
+    File endpointFile;
+    JSONObject endpoints;
+
     @Override
-    public void onStart(ISuite suite) {
+    public void onStart(ISuite suite)  {
+        classLoader = getClass().getClassLoader();
+        endpointFile = new File(classLoader.getResource("endpoints.json").getFile());
+        endpoints = new JSONObject(endpointFile);
+
         /*----- Transfer -----*/
-        Transfers.host = System.getProperty("hostTransfer");
-        Transfers.buildEndPoints();
+        //Transfers.host = System.getProperty("hostTransfer");
+        //Transfers.buildEndPoints();
         /*----- Accounts -----*/
-        Accounts.host = System.getProperty("hostAccount");
-        Accounts.buildEndPoints();
+        //Accounts.host = System.getProperty("hostAccount");
+        //Accounts.buildEndPoints();
 
     }
 }

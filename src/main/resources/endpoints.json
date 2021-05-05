@@ -1,0 +1,26 @@
+{
+  "Dev" : {
+    "Atlantis": {
+      "User":"http://20.62.237.47:8095"
+    },
+    "Genesis": {
+      "Transfer": "http://52.186.163.40:8096",
+      "Balance" : ""
+    },
+    "Kraken": {
+      "Accounts": "http://52.150.32.244:8080"
+    }
+  },
+  "QA": {
+    "Atlantis": {
+      "User": ""
+    },
+    "Genesis":{
+      "Transfer": "",
+      "Balance": ""
+    },
+    "Kraken": {
+      "Accounts":""
+    }
+  }
+}
