@@ -4,7 +4,7 @@ import org.testng.Assert;
 import hibernate.AccountDao;
 import models.Account;
 
-public class AccountsCheckPoints {
+public class TransfersDataBaseAsserts {
 
     public void dataBaseAllFields(Account inputAccount) {
         AccountDao accountDao = new AccountDao();

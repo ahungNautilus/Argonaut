@@ -7,7 +7,7 @@
             </run>
         </groups>
         <classes>
-            <class name="Transfers.HelloWorld"></class>
+            <class name="TransfersDEPRECATED.HelloWorld"></class>
         </classes>
     </test>
 </suite>

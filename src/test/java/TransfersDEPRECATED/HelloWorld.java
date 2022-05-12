@@ -1,4 +1,4 @@
-package Transfers;
+package TransfersDEPRECATED;
 
 import io.restassured.response.Response;
 import org.json.JSONObject;
@@ -8,6 +8,7 @@ import utils.CreateBodyContent;
 import utils.RequestMakers;
 
 public class HelloWorld {
+    /*
     @Test
     public void createNewEtop(){
         String url = "http://nonprod-aks.api-nautilus.net:30616/transfers";
@@ -21,4 +22,6 @@ public class HelloWorld {
         Assert.assertTrue(responseBody.has("category"));
 
     }
+
+     */
 }
