@@ -12,6 +12,7 @@ import utils.RequestMakers;
 import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
+import utils.KafkaTestConsumer;
 
 public class common {
 
@@ -19,8 +20,17 @@ public class common {
     JSONObject jsonResponse;
     Response response;
 
+
     @Given("a payload:")
     public void a_payload(io.cucumber.datatable.DataTable dataTable) {
+
+        KafkaTestConsumer kafkaConsumer = new KafkaTestConsumer();
+
+        kafkaConsumer.readKafkaMessagess();
+
+
+
+
 
         ArrayList<String> keys = new ArrayList(), values = new ArrayList();
         keys.add("source_account_id");
