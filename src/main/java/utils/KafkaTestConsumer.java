@@ -3,16 +3,23 @@ package utils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
+import java.util.stream.StreamSupport;
 
 public class KafkaTestConsumer {
 
-    public void readKafkaMessagess (){
 
-        String topic = "transfer";
+    public ConsumerRecord<String,String> readKafkaMessagess (String transferId){
+
+        String topic = "ncb_operations";
 
         Properties props = new Properties();
         props.setProperty("bootstrap.servers", "boostrap: nt-use1-qa-ehn-eh1.servicebus.windows.net:9093");
@@ -34,16 +41,35 @@ public class KafkaTestConsumer {
         //From wich topic you have to consume
         consumer.subscribe(Collections.singleton(topic));
 
+        //The message is searched by transfer id and only one message is returned
+        boolean recordFound = false;
+        int i = 0;
+        ConsumerRecord<String,String> recordToReturn = null;
         while(true){
-            ConsumerRecords<String, String> records = consumer.poll(100);
+
+            ConsumerRecords<String, String> records = consumer.poll(5);
             for(ConsumerRecord<String,String> record:records){
-                System.out.println(record.headers().);
-                System.out.println(record.value());
+                if (record.value().contains(transferId)){
+                    System.out.println(record.headers());
+                    System.out.println(record.value());
+                    recordToReturn = record;
+                    recordFound = true;
+                    break;
+                }
             }
+            if(i>150 || recordFound == true) break;
         }
-
-
-
-
+        return recordToReturn;
     }
+
+    public String HeaderBuilder(ConsumerRecord<String,String> record,String field){
+        return new String(StreamSupport
+                .stream(record.headers().spliterator(), false)
+                .filter(header -> header.key().equals(field))
+                .findFirst()
+                .get()
+                .value());
+    }
+
+
 }

@@ -1,10 +1,13 @@
 package steps.transfers;
 
 import checkpoints.TransfersResponseAsserts;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.response.Response;
+import models.TopTransfer;
 import org.json.JSONObject;
 import utils.CreateBodyContent;
 import utils.RequestMakers;
@@ -12,25 +15,18 @@ import utils.RequestMakers;
 import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
-import utils.KafkaTestConsumer;
 
 public class common {
 
     JSONObject inputBody;
     JSONObject jsonResponse;
     Response response;
+    TopTransfer inputTopTransfer, responseTopTransfer;
+
 
 
     @Given("a payload:")
     public void a_payload(io.cucumber.datatable.DataTable dataTable) {
-
-        KafkaTestConsumer kafkaConsumer = new KafkaTestConsumer();
-
-        kafkaConsumer.readKafkaMessagess();
-
-
-
-
 
         ArrayList<String> keys = new ArrayList(), values = new ArrayList();
         keys.add("source_account_id");
@@ -39,12 +35,14 @@ public class common {
         keys.add("currency");
         keys.add("comments");
         keys.add("transfer_type");
+        keys.add("external_reference_id");
         values.add(dataTable.cell(0,1));
         values.add(dataTable.cell(1,1));
         values.add(dataTable.cell(2,1));
         values.add(dataTable.cell(3,1));
         values.add(dataTable.cell(4,1));
         values.add(dataTable.cell(5,1));
+        values.add(dataTable.cell(6,1));
 
         inputBody = CreateBodyContent.setBodyPostAccount(keys, values);
 
@@ -53,16 +51,40 @@ public class common {
     public void perform_a_post_to_transfers() {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJodHRwczovL2x5bmsudXMvdGllciI6IlZVMiIsImlzcyI6Imh0dHBzOi8vZGV2LXlpdTg3a3BjLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MWE1NTBjZGE3MDc2NTAwNmExNWZhODkiLCJhdWQiOlsiaHR0cDovL2FwcGNvbnN1bWVyYXV0aGJmZiIsImh0dHBzOi8vZGV2LXlpdTg3a3BjLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2MjMzNTg2NzEsImV4cCI6MTYyNDAzMzQ0MSwiYXpwIjoidGRpNHoxb2ZSZ0xVRlhUVUtUOVJsYTdhcEZsczNyMXYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG9mZmxpbmVfYWNjZXNzIiwiZ3R5IjoicGFzc3dvcmQiLCJqdGkiOiIzM2Y4YmFjYy02YzU5LTRlNGUtODcyMy1jYzk5ZWIwMTlkZjAifQ.tizAQTsIA5sud3QquJz7oKokTHvvD1jC_gQGqFs9ugc";
         response = RequestMakers.makePostRequestWithToken("http://nonprod-aks.api-nautilus.net:30616/transfers/"
-                , inputBody.toString(),jwt);
+                ,inputBody.toString(),jwt);
         jsonResponse = new JSONObject(response.getBody().asString());
         System.out.println(jsonResponse);
 
     }
-    @Then("the status code is {string}")
-    public void the_status_code_is(String statusCode) {
+
+    @Then("verify that the status code it is {string}")
+    public void verify_that_the_status_code_it_is(String statusCode) {
         TransfersResponseAsserts.validateStatusCode(parseInt(statusCode),response.getStatusCode());
+        //KafkaTestConsumer kafkaConsumer = new KafkaTestConsumer();
+        //kafkaConsumer.readKafkaMessagess(jsonResponse.get("transfer_id").toString());
     }
+
+    @And("all the data in the response body is correct and valid")
+    public void all_the_data_in_the_response_body_is_correct_and_valid() {
+        Gson g = new Gson();
+        inputTopTransfer = g.fromJson(inputBody.toString(), TopTransfer.class);
+        responseTopTransfer = g.fromJson(jsonResponse.toString(), TopTransfer.class);
+        inputTopTransfer.setTransfer_id(responseTopTransfer.getTransfer_id());
+        //esto hay que arreglarlo y pasarle la fecha actual con java y cortar los minutos para que siempre coincida
+        inputTopTransfer.setDatetime(responseTopTransfer.getDatetime());
+        inputTopTransfer.setStatus("PENDING");
+        inputTopTransfer.setCategory("PERSONAL");
+        try{
+            TransfersResponseAsserts.topResponseComparer(inputTopTransfer, responseTopTransfer);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Then("new transfer is in db")
     public void new_transfer_is_in_db() {
+
     }
 }
