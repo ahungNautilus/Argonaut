@@ -1,6 +1,6 @@
 package checkpoints;
 
-import models.TopTransfer;
+import models.KafkaEvents.TopTransfer;
 import org.testng.Assert;
 
 import java.lang.reflect.Field;
